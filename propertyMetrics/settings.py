@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # Local apps
     'properties',
     'metrices',
+    'daily_metrics',
 ]
 
 MIDDLEWARE = [
