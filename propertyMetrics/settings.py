@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'properties',
     'metrices',
     'daily_metrics',
+    'property_config',
 ]
 
 MIDDLEWARE = [

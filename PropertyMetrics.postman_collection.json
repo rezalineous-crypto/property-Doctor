@@ -1,0 +1,480 @@
+{
+  "info": {
+    "name": "PropertyMetrics API",
+    "description": "Postman collection for PropertyMetrics Django application",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "username",
+      "value": "admin",
+      "type": "string"
+    },
+    {
+      "key": "password",
+      "value": "admin",
+      "type": "string"
+    },
+    {
+      "key": "csrfToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "sessionId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Get CSRF Token",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/admin/",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", ""]
+            },
+            "header": []
+          }
+        },
+        {
+          "name": "Login (Session Auth)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/admin/login/",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "login", ""]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "key": "X-CSRFToken",
+                "value": "{{csrfToken}}"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "{{username}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}"
+                },
+                {
+                  "key": "csrfmiddlewaretoken",
+                  "value": "{{csrfToken}}"
+                },
+                {
+                  "key": "next",
+                  "value": "/admin/"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/admin/logout/",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "logout", ""]
+            },
+            "header": [
+              {
+                "key": "X-CSRFToken",
+                "value": "{{csrfToken}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "API Login (DRF)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api-auth/login/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api-auth", "login", ""]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "{{username}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Properties",
+      "item": [
+        {
+          "name": "List All Properties",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/properties/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "properties", ""]
+            }
+          }
+        },
+        {
+          "name": "Create Property",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/properties/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "properties", ""]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Sample Property\",\n    \"address\": \"123 Main Street\",\n    \"type\": \"apartment\",\n    \"manager\": \"John Doe\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Property by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/properties/1/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "properties", "1", ""]
+            }
+          }
+        },
+        {
+          "name": "Update Property",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{baseUrl}}/api/properties/1/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "properties", "1", ""]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Property Name\",\n    \"address\": \"456 New Street\",\n    \"type\": \"apartment\",\n    \"manager\": \"Jane Smith\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Property",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/properties/1/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "properties", "1", ""]
+            }
+          }
+        },
+        {
+          "name": "Import Properties",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/properties/import/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "properties", "import", ""]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "multipart/form-data"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Property Config",
+      "item": [
+        {
+          "name": "List All Property Configs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/property-config/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "property-config", ""]
+            }
+          }
+        },
+        {
+          "name": "Create Property Config",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/property-config/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "property-config", ""]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"property\": 1,\n    \"month\": \"2024-01\",\n    \"target_occupancy\": 80,\n    \"target_revenue\": 10000,\n    \"target_expenses\": 5000\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Property Config by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/property-config/1/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "property-config", "1", ""]
+            }
+          }
+        },
+        {
+          "name": "Update Property Config",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{baseUrl}}/api/property-config/1/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "property-config", "1", ""]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"property\": 1,\n    \"month\": \"2024-01\",\n    \"target_occupancy\": 85,\n    \"target_revenue\": 12000,\n    \"target_expenses\": 5500\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Property Config",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/property-config/1/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "property-config", "1", ""]
+            }
+          }
+        },
+        {
+          "name": "Property Evaluation (API)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/property-config/property-evaluation/1/2024-01/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "property-config", "property-evaluation", "1", "2024-01", ""]
+            }
+          }
+        },
+        {
+          "name": "Property Evaluation View (HTML)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/property-config/property-evaluation-view/1/2024-01/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "property-config", "property-evaluation-view", "1", "2024-01", ""]
+            }
+          }
+        },
+        {
+          "name": "Property Diagnosis (API)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/property-config/property-diagnosis/1/2024-01/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "property-config", "property-diagnosis", "1", "2024-01", ""]
+            }
+          }
+        },
+        {
+          "name": "Property Diagnosis View (HTML)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/property-config/property-diagnosis-view/1/2024-01/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "property-config", "property-diagnosis-view", "1", "2024-01", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Metrics",
+      "item": [
+        {
+          "name": "Import Metrics",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/metrics/import/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "metrics", "import", ""]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "multipart/form-data"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Daily Metrics",
+      "item": [
+        {
+          "name": "Upload Daily Report",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/daily-metrics/upload/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "daily-metrics", "upload", ""]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "multipart/form-data"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "data_type",
+                  "value": "actual",
+                  "type": "text"
+                },
+                {
+                  "key": "dry_run",
+                  "value": "false",
+                  "type": "text"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List All Daily Reports",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/daily-metrics/reports/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "daily-metrics", "reports", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Daily Report by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/daily-metrics/reports/1/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "daily-metrics", "reports", "1", ""]
+            }
+          }
+        },
+        {
+          "name": "Delete Daily Report",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/daily-metrics/reports/1/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "daily-metrics", "reports", "1", ""]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
