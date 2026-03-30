@@ -55,7 +55,7 @@ class PropertyEvaluationService:
             date__month=month_num,
             data_type='actual'
         ).aggregate(
-            total_nights=Sum('bed_nights'),
+            total_nights=Sum('stay_over'),
             total_revenue=Sum('total_income')
         )
         
@@ -66,7 +66,7 @@ class PropertyEvaluationService:
             date__month=month_num,
             data_type='otb'
         ).aggregate(
-            total_nights=Sum('bed_nights'),
+            total_nights=Sum('stay_over'),
             total_revenue=Sum('total_income')
         )
         
