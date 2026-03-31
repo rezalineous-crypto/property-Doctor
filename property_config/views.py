@@ -3,6 +3,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404, render
 from django.views import View
+import json
+from django.utils.safestring import mark_safe
 from properties.models import Property
 from .models import PropertyConfig
 from .serializers import PropertyConfigSerializer
@@ -212,6 +214,66 @@ class PropertyEvaluationTemplateView(View):
                 },
             }
             
+            # JSON Data for display
+            json_context = {
+                'property': {
+                    'id': evaluation_data['property_id'],
+                    'name': evaluation_data['property_name'],
+                },
+                'month': evaluation_data['month'],
+                'month_progress': evaluation_data['current_day'] / evaluation_data['days_in_month'],
+                'current_day': evaluation_data['current_day'],
+                'days_in_month': evaluation_data['days_in_month'],
+                'rooms': evaluation_data['rooms'],
+                'actual': {
+                    'nights_to_date': evaluation_data['actual_nights_td'],
+                    'revenue_to_date': float(evaluation_data['actual_revenue_td']),
+                    'adr': float(evaluation_data['actual_adr']),
+                },
+                'otb': {
+                    'nights': evaluation_data['otb_nights'],
+                    'revenue': float(evaluation_data['otb_revenue']),
+                },
+                'expected': {
+                    'adr': float(evaluation_data['expected_adr']),
+                    'occupancy': float(evaluation_data['expected_occupancy']),
+                    'nights_month': evaluation_data['expected_nights_month'],
+                    'revenue_month': float(evaluation_data['expected_revenue_month']),
+                    'nights_to_date': evaluation_data['expected_nights_td'],
+                    'revenue_to_date': float(evaluation_data['expected_revenue_td']),
+                },
+                'kpis': {
+                    'pace_ratio': {
+                        'value': float(evaluation_data['pace_ratio']),
+                        'threshold': float(service.config.pace_threshold),
+                    },
+                    'nights_pace_ratio': {
+                        'value': float(evaluation_data['nights_pace_ratio']),
+                        'low_threshold': float(service.config.nights_low_threshold),
+                        'high_threshold': float(service.config.nights_high_threshold),
+                    },
+                    'adr_ratio': {
+                        'value': float(evaluation_data['adr_ratio']),
+                        'low_threshold': float(service.config.adr_low_threshold),
+                        'high_threshold': float(service.config.adr_high_threshold),
+                    },
+                    'adr_gap': float(evaluation_data['adr_gap']),
+                },
+                'forecast': {
+                    'forecast_revenue': float(evaluation_data['forecast_revenue']),
+                    'potential_revenue': float(evaluation_data['potential_revenue']),
+                    'remaining_free_days': evaluation_data['remaining_free_days'],
+                    'forecast_vs_target': float(evaluation_data['forecast_vs_target']),
+                    'forecast_vs_target_pct': float(evaluation_data['forecast_vs_target_pct']),
+                },
+                'data_validation': {
+                    'has_revenue_data': evaluation_data['has_revenue_data'],
+                    'has_nights_data': evaluation_data['has_nights_data'],
+                    'is_valid': evaluation_data['data_valid'],
+                },
+            }
+            context['json_data'] = mark_safe(json.dumps(json_context, indent=2))
+            
             return render(request, 'property_config/property_evaluation.html', context)
         
         except ValueError as e:
@@ -367,6 +429,19 @@ class PropertyDiagnosisTemplateView(View):
                 # Diagnosis Reference
                 'diagnosis_reference': diagnosis_data['diagnosis_reference'],
             }
+            
+            # JSON Data for display
+            json_context = {
+                'property': diagnosis_data['property'],
+                'month': diagnosis_data['month'],
+                'diagnosis': diagnosis_data['diagnosis'],
+                'key_metrics': diagnosis_data['key_metrics'],
+                'data_assessment': diagnosis_data['data_assessment'],
+                'forecast': diagnosis_data['forecast'],
+                'action_value': diagnosis_data['action_value'],
+                'diagnosis_reference': diagnosis_data['diagnosis_reference'],
+            }
+            context['json_data'] = mark_safe(json.dumps(json_context, indent=2))
             
             return render(request, 'property_config/property_diagnosis.html', context)
         

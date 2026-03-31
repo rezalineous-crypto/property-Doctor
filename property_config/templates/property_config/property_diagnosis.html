@@ -536,6 +536,30 @@
                 </div>
                 {% endfor %}
             </div>
+            
+            <!-- JSON Data Display -->
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e9ecef;">
+                <h3 class="section-title">Raw JSON Response</h3>
+                
+                <div style="background: #1e1e1e; border-radius: 8px; padding: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <span style="color: #aaa; font-size: 12px;">JSON Data</span>
+                        <button onclick="copyJson()" style="background: #4CAF50; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px;">Copy</button>
+                    </div>
+                    <pre id="jsonOutput" style="color: #d4d4d4; font-family: 'Consolas', 'Monaco', monospace; font-size: 13px; line-height: 1.5; overflow-x: auto; margin: 0;">{{ json_data }}</pre>
+                </div>
+            </div>
+            
+            <script>
+                function copyJson() {
+                    const jsonText = document.getElementById('jsonOutput').innerText;
+                    navigator.clipboard.writeText(jsonText).then(function() {
+                        alert('JSON copied to clipboard!');
+                    }, function(err) {
+                        console.error('Could not copy text: ', err);
+                    });
+                }
+            </script>
         </div>
     </div>
 </body>
